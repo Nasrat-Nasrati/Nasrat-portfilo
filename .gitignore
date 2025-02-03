@@ -16,10 +16,8 @@ __pycache__/
 *.secret
 config/settings/local.py  # If you store local settings separately
 
-# Virtual environments
-venv/
-env/
-.venv/
+# Virtual environments (ignore the entire folder)
+mywebsite_env/
 
 # Database files (SQLite)
 db.sqlite3
@@ -30,8 +28,6 @@ media/
 
 # Static files collected by Django (keep only `static/`, ignore `staticfiles/`)
 staticfiles/
-# Uncomment below if using WhiteNoise with Heroku
-# .whitenoise-cache/
 
 # Django migrations (optional, but recommended for collaboration)
 */migrations/*
