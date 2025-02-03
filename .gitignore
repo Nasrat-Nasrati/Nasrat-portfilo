@@ -1,0 +1,64 @@
+# Logs
+*.log
+*.out
+*.err
+
+# Compiled files
+*.pyc
+*.pyo
+*.pyd
+__pycache__/
+
+# Secret environment files
+.env
+.env.local
+.env.*.local
+*.secret
+config/settings/local.py  # If you store local settings separately
+
+# Virtual environments
+venv/
+env/
+.venv/
+
+# Database files (SQLite)
+db.sqlite3
+db.sqlite3-journal
+
+# Media files (user uploads, not static assets)
+media/
+
+# Static files collected by Django (keep only `static/`, ignore `staticfiles/`)
+staticfiles/
+# Uncomment below if using WhiteNoise with Heroku
+# .whitenoise-cache/
+
+# Django migrations (optional, but recommended for collaboration)
+*/migrations/*
+!*/migrations/__init__.py
+
+# IDE and editor settings
+.vscode/
+.idea/
+*.sublime-project
+*.sublime-workspace
+
+# OS-specific files
+.DS_Store  # macOS
+Thumbs.db  # Windows
+
+# JetBrains/PyCharm
+*.iml
+*.ipr
+*.iws
+.idea/
+
+# Jupyter Notebook checkpoints
+.ipynb_checkpoints/
+
+# Node.js dependencies (if using React/Vue with Django)
+node_modules/
+
+# Build artifacts (optional)
+dist/
+build/
