@@ -1,0 +1,39 @@
+<!-- templates/mywebsite_app/services.html -->
+{% extends "nasrat_website/base.html" %} {% load static %} {% block title %}My
+Services{% endblock %} {% block content %}
+<section class="py-5">
+  <div class="container">
+    <h2 class="text-center mb-4">My Services</h2>
+    <div class="row">
+      {% for service in services %}
+      <div class="col-md-4 mb-4">
+        <div class="card h-100 shadow-sm">
+          <div class="card-body text-center">
+            <i class="{{ service.icon }} fa-3x mb-3 text-primary"></i>
+            <h5 class="card-title">{{ service.name }}</h5>
+            <p class="card-text">{{ service.short_description }}</p>
+            <button
+  class="btn btn-outline-primary btn-sm"
+  onclick="openPopup('{{ service.name|escapejs }}', '{{ service.detailed_description|escapejs }}')"
+>
+  Details of Services
+</button>
+
+          </div>
+        </div>
+      </div>
+      {% endfor %}
+    </div>
+  </div>
+</section>
+
+<!-- Popup Structure -->
+<div id="servicePopup" class="popup">
+  <div class="popup-content">
+    <span class="close-btn" onclick="closePopup()">&times;</span>
+    <h2 id="popupTitle"></h2>
+    <p id="popupDescription"></p>
+  </div>
+</div>
+
+{% endblock %}

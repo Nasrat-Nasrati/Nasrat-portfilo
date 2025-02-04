@@ -1,0 +1,70 @@
+{% extends "nasrat_website/base.html" %} {% load static %} {% block title %}About
+Page{% endblock %} {% block head %} {{ block.super }}
+<link rel="stylesheet" href="{% static 'css/about.css' %}" />
+{% endblock %} {% block content %}
+<div class="container mt-4">
+  <!-- Profile Photo at the Top Middle -->
+  <div class="row justify-content-center">
+    <div class="col-md-6 text-center">
+      {% if about.photo %}
+      <img
+        src="{{ about.photo.url }}"
+        alt="Profile Photo"
+        class="img-fluid rounded-circle"
+        width="200"
+      />
+      {% else %}
+      <p>No profile photo available</p>
+      {% endif %}
+    </div>
+  </div>
+
+  <!-- Name and Title Below Photo -->
+  <div class="row justify-content-center mt-3">
+    <div class="col-md-8 text-center">
+      <h2>{{ about.full_name }}</h2>
+      <h4 class="text-muted">{{ about.title }}</h4>
+    </div>
+  </div>
+
+  <!-- Split Content into Two Columns -->
+  <div class="row mt-4">
+    <!-- Left Column -->
+    <div class="col-md-6">
+      <p><strong>Location:</strong> {{ about.location }}</p>
+      <p><strong>About Me:</strong> {{ about.bio }}</p>
+      <p><strong>Experience:</strong> {{ about.years_of_experience }} years</p>
+      <p><strong>Specialties:</strong> {{ about.specialties }}</p>
+      <p><strong>Education:</strong> {{ about.education }}</p>
+      <p><strong>Work Experience:</strong> {{ about.work_experience }}</p>
+    </div>
+
+    <!-- Right Column -->
+    <div class="col-md-6">
+      <p>
+        <strong>Programming Languages:</strong> {{ about.programming_languages
+        }}
+      </p>
+      <p><strong>Frameworks:</strong> {{ about.frameworks }}</p>
+      <p><strong>Tools:</strong> {{ about.tools }}</p>
+      <p><strong>Services:</strong> {{ about.services }}</p>
+      <p><strong>Certifications:</strong> {{ about.certifications }}</p>
+      <p><strong>Projects:</strong> {{ about.projects }}</p>
+      <p>
+        <strong>Contact:</strong>
+        <a href="mailto:{{ about.email }}">{{ about.email }}</a>
+        {% if about.phone_number %} | {{ about.phone_number }} {% endif %}
+      </p>
+      <p>
+        <strong>Social Links:</strong>
+        {% if about.linkedin %}
+        <a href="{{ about.linkedin }}" target="_blank">LinkedIn</a> | {% endif%}
+        {% if about.github %}
+        <a href="{{ about.github }}" target="_blank">GitHub</a> | {% endif %}
+        {%if about.twitter %}
+        <a href="{{ about.twitter }}" target="_blank">Twitter</a> {% endif %}
+      </p>
+    </div>
+  </div>
+</div>
+{% endblock %}
