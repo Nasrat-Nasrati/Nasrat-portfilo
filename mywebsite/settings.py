@@ -41,6 +41,8 @@ INSTALLED_APPS = [
     # my application list 
     'nasrat_website',
     'django_extensions',
+   
+
 ]
 
 MIDDLEWARE = [
@@ -144,3 +146,10 @@ STATICFILES_DIRS = [os.path.join(BASE_DIR, 'static')]
 
 # 🔹 Add this line
 STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')  
+
+# logout redirect
+LOGOUT_REDIRECT_URL = 'home'  # Replace 'home' with your desired URL name
+
+# used for email configuration 
+EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'  # For testing
+DEFAULT_FROM_EMAIL = 'ehnn2020@gmail.com'

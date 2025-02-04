@@ -1,0 +1,14 @@
+{% extends "nasrat_website/base.html" %}
+
+{% block title %}Logout{% endblock %}
+
+{% block content %}
+
+<h2>Logout</h2>
+<form action="{% url 'logout' %}" method="post">
+    {% csrf_token %}
+    <button type="submit">Logout</button>
+</form>
+{% endblock %}
+
+

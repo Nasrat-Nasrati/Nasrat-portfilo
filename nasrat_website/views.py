@@ -1,6 +1,9 @@
-from django.shortcuts import render  
-from django.http import HttpResponse  
+from django.shortcuts import render, redirect
+from django.contrib.auth import login
+from .forms import SignUpForm
 from .models import About,Projects,Portfolio,Services,Contact
+from django.contrib.auth.decorators import login_required
+
 
 def home(request):
     return render(request, 'nasrat_website/home.html')
@@ -35,12 +38,26 @@ def services(request):
 
 
 
-
+@login_required
 def contact(request):
-    # Fetch all contact submissions ordered by creation date
     contact = Contact.objects.all().order_by('created_at')
-    
-    # Pass the contact variable to the template
     return render(request, 'nasrat_website/contact_us.html', {'contact': contact})
+
+
+
+def LogoutView(request):
+    return render(request, 'nasrat_website/logout.html')
     
 
+
+def signup(request):
+    if request.method == "POST":
+        form = SignUpForm(request.POST)
+        if form.is_valid():
+            user = form.save()
+            login(request, user)  # Log in the user after signing up
+            return redirect('home')  # Redirect to home or dashboard
+    else:
+        form = SignUpForm()
+    
+    return render(request, "nasrat_website/signup.html", {"form": form})
