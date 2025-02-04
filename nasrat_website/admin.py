@@ -1,6 +1,6 @@
 from django.contrib import admin
 from django.utils.html import format_html
-from .models import About,Projects,Portfolio,Services
+from .models import About,Projects,Portfolio,Services,Contact
 
 class AdminAbout(admin.ModelAdmin):
     list_display = ('full_name', 'title', 'photo_preview', 'email', 'years_of_experience', 'location')
@@ -84,3 +84,13 @@ class AdminServices(admin.ModelAdmin):
     icon_display.short_description = "Icon Preview"
 
 admin.site.register(Services,AdminServices)
+
+
+
+class AdminContact(admin.ModelAdmin):
+    list_display = ('full_name', 'email', 'phone')
+    list_filter = ('full_name',)
+    search_fields = ('full_name', 'email', 'phone')
+    readonly_fields = ('created_at', 'updated_at')  # These fields are now valid
+
+admin.site.register(Contact, AdminContact)

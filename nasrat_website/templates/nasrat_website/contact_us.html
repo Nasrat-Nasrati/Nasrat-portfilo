@@ -1,0 +1,50 @@
+<!-- templates/myapp/home.html -->
+{% extends "nasrat_website/base.html" %}
+{% load static %}
+{% block title %}
+Contact Us
+{% endblock %}
+{% block content %}
+
+<!-- Page Title -->
+<h1 class="text-center mb-5 mt-4">Contact Us Submissions</h1>
+
+<div class="container">
+  <!-- Table of Contacts -->
+  <div class="card shadow-sm">
+    <div class="card-body">
+      <div class="table-responsive">
+        <table class="table table-hover table-bordered">
+          <thead class="thead-dark">
+            <tr>
+              <th scope="col">#</th>
+              <th scope="col">Full Name</th>
+              <th scope="col">Email</th>
+              <th scope="col">Phone</th>
+              <th scope="col">Message</th>
+              <th scope="col">Date Submitted</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for contact in contact %}
+              <tr>
+                <th scope="row">{{ forloop.counter }}</th>
+                <td>{{ contact.full_name }}</td>
+                <td>{{ contact.email }}</td>
+                <td>{{ contact.phone }}</td>
+                <td>{{ contact.message|truncatewords:15 }}</td>
+                <td>{{ contact.created_at }}</td>
+              </tr>
+            {% empty %}
+              <tr>
+                <td colspan="6" class="text-center text-muted py-4">No contact submissions yet.</td>
+              </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>
+
+{% endblock %}

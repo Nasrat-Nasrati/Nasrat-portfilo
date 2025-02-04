@@ -1,6 +1,6 @@
 from django.shortcuts import render  
 from django.http import HttpResponse  
-from .models import About,Projects,Portfolio,Services
+from .models import About,Projects,Portfolio,Services,Contact
 
 def home(request):
     return render(request, 'nasrat_website/home.html')
@@ -35,6 +35,12 @@ def services(request):
 
 
 
+
 def contact(request):
-    return HttpResponse("the contact will comming as soon as possbile")
+    # Fetch all contact submissions ordered by creation date
+    contact = Contact.objects.all().order_by('created_at')
+    
+    # Pass the contact variable to the template
+    return render(request, 'nasrat_website/contact_us.html', {'contact': contact})
+    
 
