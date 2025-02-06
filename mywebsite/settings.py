@@ -60,7 +60,10 @@ ROOT_URLCONF = 'mywebsite.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        'DIRS': [
+    
+           
+        ],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -141,14 +144,16 @@ MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')  
 
 # Static files (CSS, JavaScript, Images)
-STATIC_URL = '/static/'
-STATICFILES_DIRS = [os.path.join(BASE_DIR, 'static')]
+STATIC_URL = '/static/'  # URL to access static files
 
-# 🔹 Add this line
-STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')  
+# Add the 'static' folder inside your app
+STATICFILES_DIRS = [
+    os.path.join(BASE_DIR, 'nasrat_website/static'),  # Adjust this if your static folder is inside a different app
+]
 
-# logout redirect
-LOGOUT_REDIRECT_URL = 'home'  # Replace 'home' with your desired URL name
+# Directory where static files will be collected in production
+STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')  # This folder is for collected static files
+
 
 # used for email configuration 
 EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'  # For testing
