@@ -1,158 +1,149 @@
 from django.db import models
-from datetime import timedelta
 from django.utils.text import slugify
 
-
-# Create your models here.
 class About(models.Model):
     full_name = models.CharField(max_length=255)
     title = models.CharField(max_length=255)
     photo = models.ImageField(upload_to='profile_photos/', blank=True, null=True)
     short_bio = models.CharField(max_length=300)
     location = models.CharField(max_length=255, blank=True, null=True)
-    bio = models.TextField()
-    years_of_experience = models.PositiveIntegerField()
-    specialties = models.TextField(help_text="Comma-separated skills (e.g. Python, Django, JavaScript)")
-    education = models.TextField()
-    work_experience = models.TextField()
-    programming_languages = models.TextField()
-    frameworks = models.TextField()
-    tools = models.TextField()
-    services = models.TextField()
+    age = models.PositiveIntegerField()
+    degree = models.CharField(max_length=255)
     email = models.EmailField()
     phone_number = models.CharField(max_length=20, blank=True, null=True)
-    linkedin = models.URLField(blank=True, null=True)
-    github = models.URLField(blank=True, null=True)
-    twitter = models.URLField(blank=True, null=True)
-    certifications = models.TextField(blank=True, null=True)
-    projects = models.TextField(blank=True, null=True)
+    freelance = models.BooleanField(default=True)
+    biography = models.TextField()
 
     def __str__(self):
         return self.full_name
-    
-
-class Projects(models.Model):
-    name = models.CharField(max_length=255, help_text="The name of the project")
-    slug = models.SlugField(max_length=255, blank=True, unique=True) 
-    description = models.TextField(help_text="A detailed description of the project")
-    technology = models.CharField(max_length=255, help_text="Technologies used in the project")
-    start_date = models.DateField(help_text="Start date of the project")
-    end_date = models.DateField(help_text="End date of the project", null=True, blank=True)
-    role = models.CharField(max_length=255, help_text="Your role in the project")
-    team_size = models.IntegerField(help_text="Number of people in the team", null=True, blank=True)
-    project_url = models.URLField(help_text="URL to the project (if available)", null=True, blank=True)
-    github_url = models.URLField(help_text="URL to the GitHub repository (if available)", null=True, blank=True)
-    created_at = models.DateTimeField(auto_now_add=True, help_text="Timestamp when the project was added")
-    updated_at = models.DateTimeField(auto_now=True, help_text="Timestamp when the project was last updated")
 
 
-    def save(self, *args, **kwargs):
-        if not self.slug:  # if slug is empty, generate from name
-            self.slug = slugify(self.name)
-        super(Projects, self).save(*args, **kwargs)
+class SocialLink(models.Model):
+    about = models.ForeignKey(About, on_delete=models.CASCADE, related_name='social_links')
+    platform = models.CharField(max_length=50)  # e.g., LinkedIn, GitHub, Twitter
+    url = models.URLField()
+
+    def __str__(self):
+        return f"{self.platform} - {self.about.full_name}"
 
 
-    @property
-    def duration(self):
-        """
-        Calculate the duration of the project based on start_date and end_date.
-        Returns a string representation of the duration (e.g., "3 months").
-        """
-        if self.start_date and self.end_date:
-            delta = self.end_date - self.start_date
-            days = delta.days
-            months = days // 30  # Approximate months
-            years = days // 365  # Approximate years
-
-            if years > 0:
-                return f"{years} year{'s' if years > 1 else ''}"
-            elif months > 0:
-                return f"{months} month{'s' if months > 1 else ''}"
-            else:
-                return f"{days} day{'s' if days > 1 else ''}"
-        elif self.start_date:
-            return "Ongoing"
-        else:
-            return "Not specified"
+class Specialty(models.Model):
+    about = models.ForeignKey(About, on_delete=models.CASCADE, related_name='specialties')
+    name = models.CharField(max_length=100)
 
     def __str__(self):
         return self.name
+
+
+class Education(models.Model):
+    about = models.ForeignKey(About, on_delete=models.CASCADE, related_name='educations')
+    institution = models.CharField(max_length=255)
+    degree = models.CharField(max_length=255)
+    start_date = models.DateField()
+    end_date = models.DateField(blank=True, null=True)
+
+    def __str__(self):
+        return f"{self.degree} at {self.institution}"
+
+
+class WorkExperience(models.Model):
+    about = models.ForeignKey(About, on_delete=models.CASCADE, related_name='work_experiences')
+    company = models.CharField(max_length=255)
+    position = models.CharField(max_length=255)
+    start_date = models.DateField()
+    end_date = models.DateField(blank=True, null=True)
+    description = models.TextField()
+
+    def __str__(self):
+        return f"{self.position} at {self.company}"
+
+
+class Skill(models.Model):
+    about = models.ForeignKey(About, on_delete=models.CASCADE, related_name='skills')
+    name = models.CharField(max_length=100)
+    proficiency = models.IntegerField()  # Proficiency level as a percentage
+
+    def __str__(self):
+        return self.name
+
+
+class Certification(models.Model):
+    about = models.ForeignKey(About, on_delete=models.CASCADE, related_name='certifications')
+    name = models.CharField(max_length=255)
+    issuing_organization = models.CharField(max_length=255)
+    issue_date = models.DateField()
+
+    def __str__(self):
+        return self.name
+
+
+class Resume(models.Model):
+    name = models.CharField(max_length=255)
+    job_title = models.CharField(max_length=255)
+    summary = models.TextField()
+
+    def __str__(self):
+        return self.name
+
+
+class ContactDetail(models.Model):
+    resume = models.ForeignKey(Resume, on_delete=models.CASCADE, related_name='contact_details')
+    type = models.CharField(max_length=50)  # e.g., email, phone, address
+    value = models.CharField(max_length=255)
+
+    def __str__(self):
+        return f"{self.type}: {self.value}"
+
+
+class EducationDetail(models.Model):
+    resume = models.ForeignKey(Resume, on_delete=models.CASCADE, related_name='education_details')
+    institution = models.CharField(max_length=255)
+    degree = models.CharField(max_length=255)
+    start_date = models.DateField()
+    end_date = models.DateField(blank=True, null=True)
+    description = models.TextField()
+
+    def __str__(self):
+        return f"{self.degree} at {self.institution}"
+
+
+class ExperienceDetail(models.Model):
+    resume = models.ForeignKey(Resume, on_delete=models.CASCADE, related_name='experience_details')
+    company = models.CharField(max_length=255)
+    position = models.CharField(max_length=255)
+    start_date = models.DateField()
+    end_date = models.DateField(blank=True, null=True)
+    description = models.TextField()
+
+    def __str__(self):
+        return f"{self.position} at {self.company}"
     
-
-class Portfolio(models.Model):
-    # Connection to About and Projects models
-    about = models.OneToOneField(About, on_delete=models.CASCADE, related_name='portfolio')
-    projects = models.ManyToManyField(Projects, related_name='portfolios', blank=True)
-
-    # Portfolio Metadata
-    title = models.CharField(max_length=255, help_text="Title of your portfolio (e.g., 'My Professional Portfolio')")
-    slug = models.SlugField(max_length=255, blank=True, unique=True, help_text="A URL-friendly version of the title")
-    created_at = models.DateTimeField(auto_now_add=True, help_text="Timestamp when the portfolio was created")
-    updated_at = models.DateTimeField(auto_now=True, help_text="Timestamp when the portfolio was last updated")
-
-    # Skills and Expertise (can be derived from About or added separately)
-    skills = models.TextField(help_text="Comma-separated list of skills (e.g., Python, Django, JavaScript)")
-    programming_languages = models.TextField(help_text="Comma-separated list of programming languages you know")
-    frameworks = models.TextField(help_text="Comma-separated list of frameworks you are proficient in")
-    tools = models.TextField(help_text="Comma-separated list of tools you use")
-
-    # Achievements and Certifications
-    certifications = models.TextField(help_text="List of certifications (e.g., AWS Certified, Python Institute)", blank=True, null=True)
-    achievements = models.TextField(help_text="Notable achievements or awards", blank=True, null=True)
-
-    # Contact Information
-
-    linkedin = models.URLField(blank=True, null=True, help_text="Your LinkedIn profile URL")
-    github = models.URLField(blank=True, null=True, help_text="Your GitHub profile URL")
-    twitter = models.URLField(blank=True, null=True, help_text="Your Twitter profile URL")
-
-    # Personal Statement or Summary
-    personal_statement = models.TextField(help_text="A brief summary of your professional journey and goals", blank=True, null=True)
-
-    def save(self, *args, **kwargs):
-        if not self.slug:
-            self.slug = slugify(self.title)
-        super(Portfolio, self).save(*args, **kwargs)
+class Project(models.Model):
+    title = models.CharField(max_length=255)
+    description = models.TextField()
+    start_date = models.DateField()
+    end_date = models.DateField(blank=True, null=True)
+    technologies_used = models.TextField()
 
     def __str__(self):
         return self.title
-    
 
 
-    
-class Services(models.Model):
-    name = models.CharField(max_length=255, help_text="Name of the service (e.g., Web Development, Mobile App Development)")
-    slug = models.SlugField(max_length=255, unique=True, blank=True, help_text="A URL-friendly version of the service name")
-    icon = models.CharField(max_length=100, help_text="Icon class for the service (e.g., 'fas fa-code' for Font Awesome)", blank=True, null=True)
-    short_description = models.CharField(max_length=255, help_text="A short description of the service (e.g., 'Build responsive and modern websites')")
-    detailed_description = models.TextField(help_text="A detailed description of the service", blank=True, null=True)
+class PortfolioItem(models.Model):
+    CATEGORY_CHOICES = [
+        ('app', 'App'),
+        ('product', 'Product'),
+        ('branding', 'Branding'),
+        ('books', 'Books'),
+    ]
 
-    # Additional Metadata
-    is_featured = models.BooleanField(default=False, help_text="Mark this service as featured to highlight it on your portfolio")
-    order = models.PositiveIntegerField(default=0, help_text="Order in which the service will appear on the portfolio (lower numbers appear first)")
-
-    # Timestamps
-    created_at = models.DateTimeField(auto_now_add=True, help_text="Timestamp when the service was created")
-    updated_at = models.DateTimeField(auto_now=True, help_text="Timestamp when the service was last updated")
-
-    def save(self, *args, **kwargs):
-        if not self.slug:
-            self.slug = slugify(self.name)
-        super(Services, self).save(*args, **kwargs)
+    project = models.ForeignKey(Project, on_delete=models.CASCADE, related_name='portfolio_items')
+    category = models.CharField(max_length=50, choices=CATEGORY_CHOICES)
+    image = models.ImageField(upload_to='portfolio/')
+    detail_link = models.URLField(blank=True, null=True)
+    preview_link = models.URLField(blank=True, null=True)
 
     def __str__(self):
-        return self.name
+        return self.project.title
     
-
-class Contact(models.Model):
-    full_name = models.CharField(max_length=100)
-    email = models.EmailField()
-    phone = models.CharField(max_length=15, blank=True)
-    message = models.TextField()
     
-    # Add these fields
-    created_at = models.DateTimeField(auto_now_add=True)
-    updated_at = models.DateTimeField(auto_now=True)
-
-    def __str__(self):
-        return f"Message from {self.full_name}"
